@@ -3,8 +3,8 @@ from itertools import cycle
 from PIL import Image
 import os
 
-# Set the page layout to wide
-st.set_page_config(layout="wide")
+# Set the page layout to wide and the sidebar to always be open
+st.set_page_config(layout="wide", initial_sidebar_state="expanded")
 
 # Set the title of the Streamlit app
 st.title("IMAGE TABLE")
@@ -37,6 +37,14 @@ def toggle_like(index):
     else:
         st.session_state.liked_images.remove(captions[index])
 
+# Sidebar content
+with st.sidebar:
+    st.text_input("Enter prompt")
+    st.button("Generate")
+    st.header("Liked Images")
+    liked_images_string = ", ".join(st.session_state.liked_images)
+    st.write(liked_images_string)
+
 # Display images in a grid format with captions within a full-width container
 with st.container():
     cols = cycle(st.columns(4))  # Create a cycle of columns for a 4-column layout
@@ -49,7 +57,7 @@ with st.container():
         else:
             col.button("Like", key=f"like_{idx}", on_click=toggle_like, args=(idx,))
 
-# Display liked images as a string
+# Display liked images as a string in the main area
 st.subheader("Liked Images")
 liked_images_string = ", ".join(st.session_state.liked_images)
 st.write(liked_images_string)
